@@ -144,6 +144,124 @@ ObjectMapper 使用这个函数获取对象后进行映射。开发者需要在�
 
 如果你需要在 extension 里实现 ObjectMapper，你需要选择这个协议而不是 `Mappable` 。
 
+## `ImmutableMappable` Protocol (Beta)
+
+> ⚠️ This feature is currently in Beta. There might be breaking API changes in the future.
+
+`ImmutableMappable` provides the ability to map immutable properties. This is how `ImmutableMappable` differs from `Mappable`:
+
+<table>
+  <tr>
+    <th>ImmutableMappable</th>
+    <th>Mappable</th>
+  </tr>
+  <tr>
+    <th colspan="2">Properties</th>
+  </tr>
+  <tr>
+    <td>
+<pre>
+<strong>let</strong> id: Int
+<strong>let</strong> name: String?
+</pre>
+  </td>
+    <td>
+<pre>
+var id: Int!
+var name: String?
+</pre>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="2">JSON -> Model</th>
+  </tr>
+  <tr>
+    <td>
+<pre>
+init(map: Map) <strong>throws</strong> {
+  id   = <strong>try</strong> map.value("id")
+  name = <strong>try?</strong> map.value("name")
+}
+</pre>
+  </td>
+    <td>
+<pre>
+mutating func mapping(map: Map) {
+  id   <- map["id"]
+  name <- map["name"]
+}
+</pre>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="2">Model -> JSON</th>
+  </tr>
+  <tr>
+    <td>
+<pre>
+mutating func mapping(map: Map) {
+  id   <strong>>>></strong> map["id"]
+  name <strong>>>></strong> map["name"]
+}
+</pre>
+    </td>
+    <td>
+<pre>
+mutating func mapping(map: Map) {
+  id   <- map["id"]
+  name <- map["name"]
+}
+</pre>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="2">Initializing</th>
+  </tr>
+  <tr>
+    <td>
+<pre>
+<strong>try</strong> User(JSONString: JSONString)
+</pre>
+    </td>
+    <td>
+<pre>
+User(JSONString: JSONString)
+</pre>
+    </td>
+  </tr>
+</table>
+
+#### `init(map: Map) throws`
+
+This throwable initializer is used to map immutable properties from the given `Map`. Every immutable property should be initialized in this initializer.
+
+This initializer throws an error when:
+- `Map` fails to get a value for the given key
+- `Map` fails to transform a value using `Transform`
+
+`ImmutableMappable` uses `Map.value(_:using:)` method to get values from the `Map`. This method should be used with the `try` keyword as it is throwable. `Optional` properties can easily be handled using `try?`.
+
+```swift
+init(map: Map) throws {
+    name      = try map.value("name") // throws an error when it fails
+    createdAt = try map.value("createdAt", using: DateTransform()) // throws an error when it fails
+    updatedAt = try? map.value("updatedAt", using: DateTransform()) // optional
+    posts     = (try? map.value("posts")) ?? [] // optional + default value
+}
+```
+
+#### `mutating func mapping(map: Map)`
+
+This method is where the reverse transform is performed (Model to JSON). Since immutable properties can not be mapped with the `<-` operator, developers have to define the reverse transform using the `>>>` operator.
+
+```swift
+mutating func mapping(map: Map) {
+    name      >>> map["name"]
+    createdAt >>> (map["createdAt"], DateTransform())
+    updatedAt >>> (map["updatedAt"], DateTransform())
+    posts     >>> map["posts"]
+}
+```
 # 轻松映射嵌套对象
 
 ObjectMapper 支持使用点语法来轻松实现嵌套对象的映射。比如有如下的 JSON 字符串：
