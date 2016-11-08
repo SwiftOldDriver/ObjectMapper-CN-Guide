@@ -1,5 +1,5 @@
 # ObjectMapper-CN-Guide
-ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构体）和 JSON  之间转换的框架。
+[ObjectMapper](https://github.com/Hearst-DD/ObjectMapper) 是一个使用 Swift 编写的用于 model 对象（类和结构体）和 JSON  之间转换的框架。
 
 - [特性](#特性)
 - [基础使用方法](#基础使用方法)
@@ -146,7 +146,7 @@ ObjectMapper 使用这个函数获取对象后进行映射。开发者需要在�
 
 ## `ImmutableMappable` Protocol (Beta)
 
-> ⚠️ This feature is currently in Beta. There might be breaking API changes in the future.
+> ⚠️ 这个特性还处于 Beta 阶段。正式发布时 API 可能会完全不同。这段等到正式发布后再翻译。
 
 `ImmutableMappable` provides the ability to map immutable properties. This is how `ImmutableMappable` differs from `Mappable`:
 
