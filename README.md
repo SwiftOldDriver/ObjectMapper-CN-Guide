@@ -1,18 +1,17 @@
 # ObjectMapper-CN-Guide
 ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构体）和 JSON  之间转换的框架。
 
-- [特性](#features)
-- [基础使用方法](#the-basics)
-- [映射嵌套对象](#easy-mapping-of-nested-objects)
-- [自定义转换规则](#custom-transforms)
-- [继承](#subclasses)
-- [泛型对象](#generic-objects)
-- [映射时的上下文对象](#mapping-context)
+- [特性](#特性)
+- [基础使用方法](#基础使用方法)
+- [映射嵌套对象](#映射嵌套对象)
+- [自定义转换规则](#自定义转换规则)
+- [继承](#继承)
+- [泛型对象](#泛型对象)
+- [映射时的上下文对象](#映射时的上下文对象)
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
 - [ObjectMapper + Realm](#objectmapper--realm)
 - [To Do](#to-do)
-- [Contributing](#contributing)
-- [Installation](#installation)
+- [安装](#installation)
 
 # 特性:
 - 把 JSON 映射成对象 
@@ -313,3 +312,68 @@ class User: Mappable {
 let context = Context()
 let user = Mapper<User>(context: context).map(JSONString)
 ```
+
+#ObjectMapper + Alamofire
+
+如果网络层你使用的是  [Alamofire](https://github.com/Alamofire/Alamofire) ，并且你希望把返回的结果转换成 Swift 对象，你可以使用 [AlamofireObjectMapper](https://github.com/tristanhimmelman/AlamofireObjectMapper) 。这是一个使用 ObjectMapper 实现的把返回的 JSON 自动转成 Swift 对象的 Alamofire 的扩展。 
+
+
+#ObjectMapper + Realm
+
+ObjectMapper 可以和 Realm 一起配合使用。使用下面的声明结构就可以使用 ObjectMapper 生成 Realm 对象：
+
+```swift
+class Model: Object, Mappable {
+	dynamic var name = ""
+
+	required convenience init?(map: Map) {
+		self.init()
+	}
+
+	func mapping(map: Map) {
+		name <- map["name"]
+	}
+}
+```
+
+如果你想要序列化相关联的 RealmObject，你可以使用 [ObjectMapper+Realm](https://github.com/jakenberg/ObjectMapper-Realm)。这是一个简单的 Realm 扩展，用于把任意的 JSON 序列化成 Realm 的类（ealm's List class。）
+
+Note: Generating a JSON string of a Realm Object using ObjectMappers' `toJSON` function only works within a Realm write transaction. This is caused because ObjectMapper uses the `inout` flag in its mapping functions (`<-`) which are used both for serializing and deserializing. Realm detects the flag and forces the `toJSON` function to be called within a write block even though the objects are not being modified.
+
+# To Do
+- Improve error handling. Perhaps using `throws`
+- Class cluster documentation
+
+# Installation
+### Cocoapods
+ObjectMapper can be added to your project using [CocoaPods 0.36 or later](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/) by adding the following line to your `Podfile`:
+
+```ruby
+pod 'ObjectMapper', '~> 2.2'
+```
+
+### Carthage
+If you're using [Carthage](https://github.com/Carthage/Carthage) you can add a dependency on ObjectMapper by adding it to your `Cartfile`:
+
+```
+github "Hearst-DD/ObjectMapper" ~> 2.2
+```
+
+### Swift Package Manager
+To add ObjectMapper to a [Swift Package Manager](https://swift.org/package-manager/) based project, add:
+
+```swift
+.Package(url: "https://github.com/Hearst-DD/ObjectMapper.git", majorVersion: 2, minor: 2),
+```
+to your `Package.swift` files `dependencies` array.
+
+### Submodule
+Otherwise, ObjectMapper can be added as a submodule:
+
+1. Add ObjectMapper as a [submodule](http://git-scm.com/docs/git-submodule) by opening the terminal, `cd`-ing into your top-level project directory, and entering the command `git submodule add https://github.com/Hearst-DD/ObjectMapper.git`
+2. Open the `ObjectMapper` folder, and drag `ObjectMapper.xcodeproj` into the file navigator of your app project.
+3. In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
+4. Ensure that the deployment target of `ObjectMapper.framework` matches that of the application target.
+5. In the tab bar at the top of that window, open the "Build Phases" panel.
+6. Expand the "Target Dependencies" group, and add `ObjectMapper.framework`.
+7. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `ObjectMapper.framework`.
