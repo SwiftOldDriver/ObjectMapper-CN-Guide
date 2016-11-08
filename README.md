@@ -3,7 +3,7 @@ ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构�
 
 - [特性](#features)
 - [基础使用方法](#the-basics)
-- [Mapping Nested Objects](#easy-mapping-of-nested-objects)
+- [映射嵌套对象](#easy-mapping-of-nested-objects)
 - [Custom Transformations](#custom-transforms)
 - [Subclassing](#subclasses)
 - [Generic Objects](#generic-objects)
@@ -143,4 +143,48 @@ ObjectMapper 使用这个函数获取对象后进行映射。开发者需要在�
 - 提供一个缓存过的对象用于映射
 - 返回另外一种类型的对象（当然是必须实现了 BaseMappable）用于映射。比如你可能通过检查 JSON 推断出用于映射的对象 ([看这个例子](https://github.com/Hearst-DD/ObjectMapper/blob/master/ObjectMapperTests/ClassClusterTests.swift#L62))。
 
-If you need to implemented ObjectMapper in an extension, you will need to select this protocol instead of `Mappable`. 如果你需要在 extension 里实现 ObjectMapper，你需要选择这个协议而不是 `Mappable` 。
+如果你需要在 extension 里实现 ObjectMapper，你需要选择这个协议而不是 `Mappable` 。
+
+# 轻松映射嵌套对象
+
+ObjectMapper 支持使用点语法来轻松实现嵌套对象的映射。比如有如下的 JSON 字符串：
+
+```json
+"distance" : {
+     "text" : "102 ft",
+     "value" : 31
+}
+```
+你可以通过这种写法直接访问到嵌套对象：
+
+```swift
+func mapping(map: Map) {
+    distance <- map["distance.value"]
+}
+```
+嵌套的键名也支持访问数组中的值。如果有一个返回的 JSON 是一个包含 distance 的数组，可以通过这种写法访问：
+
+```
+distance <- map["distances.0.value"]
+```
+如果你的键名刚好含有 `.` 符号，你需要特别声明关闭上面提到的获取嵌套对象功能：
+
+```swift
+func mapping(map: Map) {
+    identifier <- map["app.identifier", nested: false]
+}
+```
+如果刚好有嵌套的对象的键名还有 `.` ,可以在中间加入一个自定义的分割符（[#629](https://github.com/Hearst-DD/ObjectMapper/pull/629)）:
+```swift
+func mapping(map: Map) {
+    appName <- map["com.myapp.info->com.myapp.name", delimiter: "->"]
+}
+```
+这种情况的 JSON 是这样的：
+
+```json
+"com.myapp.info" : {
+     "com.myapp.name" : "SwiftOldDriver"
+}
+```
+
