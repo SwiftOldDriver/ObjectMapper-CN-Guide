@@ -7,7 +7,7 @@ ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构�
 - [自定义转换规则](#custom-transforms)
 - [继承](#subclasses)
 - [泛型对象](#generic-objects)
-- [Mapping Context](#mapping-context)
+- [映射时的上下文对象](#mapping-context)
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
 - [ObjectMapper + Realm](#objectmapper--realm)
 - [To Do](#to-do)
@@ -284,4 +284,32 @@ class Result<T: Mappable>: Mappable {
 }
 
 let result = Mapper<Result<User>>().map(JSON)
+```
+# 映射时的上下文对象
+
+`Map` 是在映射时传入的对象，带有一个 optional  `MapContext` 对象，开发者可以通过使用这个对象在映射时传入一些信息。
+
+为了使用这个特性，需要先创建一个对象实现了 `MapContext` 协议（这个协议是空的），然后在初始化时传入 `Mapper` 中。
+
+```swift
+struct Context: MapContext {
+	var importantMappingInfo = "映射时需要知道的额外信息"
+}
+
+class User: Mappable {
+	var name: String?
+	
+	required init?(map: Map){
+	
+	}
+	
+	func mapping(map: Map){
+		if let context = map.context as? Context {
+			// 获取到额外的信息
+		}
+	}
+}
+
+let context = Context()
+let user = Mapper<User>(context: context).map(JSONString)
 ```
