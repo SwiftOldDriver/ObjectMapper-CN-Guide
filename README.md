@@ -6,7 +6,7 @@ ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构�
 - [映射嵌套对象](#easy-mapping-of-nested-objects)
 - [自定义转换规则](#custom-transforms)
 - [继承](#subclasses)
-- [Generic Objects](#generic-objects)
+- [泛型对象](#generic-objects)
 - [Mapping Context](#mapping-context)
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
 - [ObjectMapper + Realm](#objectmapper--realm)
@@ -265,3 +265,23 @@ class Subclass: Base {
 ```
 
 注意确认子类中的实现调用了父类中正确的初始化器和映射函数。
+
+# 泛型对象
+
+ObjectMapper 可以处理泛型只要这个泛型也实现了`Mappable`协议。看这个例子：
+
+```swift
+class Result<T: Mappable>: Mappable {
+    var result: T?
+
+    required init?(map: Map){
+
+    }
+
+    func mapping(map: Map) {
+        result <- map["result"]
+    }
+}
+
+let result = Mapper<Result<User>>().map(JSON)
+```
