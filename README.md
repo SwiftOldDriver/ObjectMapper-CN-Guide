@@ -130,3 +130,17 @@ required init?(map: Map){
 	}
 }
 ```
+
+## `StaticMappable` 协议
+`StaticMappable` 是 `Mappable` 之外的另一种选择。 这个协议可以让开发者通过一个静态函数初始化对象而不是通过 `init?(map: Map)`。
+
+注意: `StaticMappable` 和 `Mappable` 都继承了 `BaseMappable` 协议。 `BaseMappable` 协议声明了 `mapping(map: Map)` 函数。
+
+#### `static func objectForMapping(map: Map) -> BaseMappable?` 
+ObjectMapper 使用这个函数获取对象后进行映射。开发者需要在这个函数里返回一个实现 `BaseMappable` 对象的实例。这个函数也可以用于：
+
+- 在对象进行映射前校验 JSON 
+- 提供一个缓存过的对象用于映射
+- 返回另外一种类型的对象（当然是必须实现了 BaseMappable）用于映射。比如你可能通过检查 JSON 推断出用于映射的对象 ([看这个例子](https://github.com/Hearst-DD/ObjectMapper/blob/master/ObjectMapperTests/ClassClusterTests.swift#L62))。
+
+If you need to implemented ObjectMapper in an extension, you will need to select this protocol instead of `Mappable`. 如果你需要在 extension 里实现 ObjectMapper，你需要选择这个协议而不是 `Mappable` 。
