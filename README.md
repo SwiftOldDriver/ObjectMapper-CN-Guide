@@ -5,7 +5,7 @@ ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构�
 - [基础使用方法](#the-basics)
 - [映射嵌套对象](#easy-mapping-of-nested-objects)
 - [自定义转换规则](#custom-transforms)
-- [Subclassing](#subclasses)
+- [继承](#subclasses)
 - [Generic Objects](#generic-objects)
 - [Mapping Context](#mapping-context)
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
@@ -232,3 +232,36 @@ id <- (map["id"], transform)
 ```swift
 id <- (map["id"], TransformOf<Int, String>(fromJSON: { Int($0!) }, toJSON: { $0.map { String($0) } }))
 ```
+# 继承
+
+实现了  ```Mappable``` 协议的类可以容易的被继承。当继承一个 mappable 的类时，使用这样的结构：
+
+```swift
+class Base: Mappable {
+	var base: String?
+	
+	required init?(map: Map) {
+
+	}
+
+	func mapping(map: Map) {
+		base <- map["base"]
+	}
+}
+
+class Subclass: Base {
+	var sub: String?
+
+	required init?(map: Map) {
+		super.init(map)
+	}
+
+	override func mapping(map: Map) {
+		super.mapping(map)
+		
+		sub <- map["sub"]
+	}
+}
+```
+
+注意确认子类中的实现调用了父类中正确的初始化器和映射函数。
