@@ -4,7 +4,7 @@ ObjectMapper 是一个使用 Swift 编写的用于 model 对象（类和结构�
 - [特性](#features)
 - [基础使用方法](#the-basics)
 - [映射嵌套对象](#easy-mapping-of-nested-objects)
-- [Custom Transformations](#custom-transforms)
+- [自定义转换规则](#custom-transforms)
 - [Subclassing](#subclasses)
 - [Generic Objects](#generic-objects)
 - [Mapping Context](#mapping-context)
@@ -188,3 +188,47 @@ func mapping(map: Map) {
 }
 ```
 
+# 自定义转换规则
+ObjectMapper 也支持在映射时自定义转换规则。如果要使用自定义转换，创建一个 tuple（元祖）包含 ```map["field_name"]``` 和你要使用的变换放在 ```<-``` 的右边：
+
+```swift
+birthday <- (map["birthday"], DateTransform())
+```
+当解析 JSON 时上面的转换会把 JSON 里面的 Int 值转成一个 NSDate ，如果是对象转为 JSON 时，则会把 NSDate 对象转成 Int 值。
+
+只要实现```TransformType``` 协议就可以轻松的创建自定义的转换规则：
+
+```swift
+public protocol TransformType {
+    associatedtype Object
+    associatedtype JSON
+
+    func transformFromJSON(_ value: Any?) -> Object?
+    func transformToJSON(_ value: Object?) -> JSON?
+}
+```
+
+### TransformOf
+大多数情况下你都可以使用框架提供的转换类 ```TransformOf``` 来快速的实现一个期望的转换。 ```TransformOf``` 的初始化需要两个类型和两个闭包。两个类型声明了转换的目标类型和源类型，闭包则实现具体转换逻辑。
+
+举个例子，如果你想要把一个 JSON 字符串转成 Int ，你可以像这样使用 ```TransformOf``` ：
+
+```swift
+let transform = TransformOf<Int, String>(fromJSON: { (value: String?) -> Int? in 
+    // 把值从 String? 转成 Int?
+    return Int(value!)
+}, toJSON: { (value: Int?) -> String? in
+    // 把值从 Int? 转成 String?
+    if let value = value {
+        return String(value)
+    }
+    return nil
+})
+
+id <- (map["id"], transform)
+```
+这是一种更省略的写法：
+
+```swift
+id <- (map["id"], TransformOf<Int, String>(fromJSON: { Int($0!) }, toJSON: { $0.map { String($0) } }))
+```
