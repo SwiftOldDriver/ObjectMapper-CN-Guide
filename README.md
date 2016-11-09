@@ -458,7 +458,7 @@ class Model: Object, Mappable {
 
 如果你想要序列化相关联的 RealmObject，你可以使用 [ObjectMapper+Realm](https://github.com/jakenberg/ObjectMapper-Realm)。这是一个简单的 Realm 扩展，用于把任意的 JSON 序列化成 Realm 的类（ealm's List class。）
 
-Note: Generating a JSON string of a Realm Object using ObjectMappers' `toJSON` function only works within a Realm write transaction. This is caused because ObjectMapper uses the `inout` flag in its mapping functions (`<-`) which are used both for serializing and deserializing. Realm detects the flag and forces the `toJSON` function to be called within a write block even though the objects are not being modified.
+注意：使用 ObjectMappers 的 `toJSON` 函数来生成 JSON 字符串只在 Realm 的写事务中有效（write transaction）。这是因为 ObjectMapper 在解析和生成时在映射函数（ `<-` ）中使用  `inout` 作为标记（ flag ）。Realm 会检测到标记并且强制要求 `toJSON` 函数只能在一个写的事务中调用，即使这个对象并没有被修改。
 
 # 待完成
 - 改善错误的处理。可能使用 `throws` 来处理。
