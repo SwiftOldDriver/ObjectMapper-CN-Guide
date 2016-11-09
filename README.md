@@ -464,7 +464,7 @@ Note: Generating a JSON string of a Realm Object using ObjectMappers' `toJSON` f
 - Improve error handling. Perhaps using `throws`
 - Class cluster documentation
 
-# Installation
+# 安装
 ### Cocoapods
 ObjectMapper can be added to your project using [CocoaPods 0.36 or later](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/) by adding the following line to your `Podfile`:
 
