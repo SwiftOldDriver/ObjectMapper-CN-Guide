@@ -1,4 +1,6 @@
 # ObjectMapper-CN-Guide
+> 文档由Swift老司机活动中心负责翻译，欢迎关注[@SwiftOldDriver](http://weibo.com/6062089411)
+
 [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper) 是一个使用 Swift 编写的用于 model 对象（类和结构体）和 JSON  之间转换的框架。
 
 - [特性](#特性)
