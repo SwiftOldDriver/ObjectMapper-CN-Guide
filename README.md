@@ -148,9 +148,9 @@ ObjectMapper 使用这个函数获取对象后进行映射。开发者需要在�
 
 ## `ImmutableMappable` Protocol (Beta)
 
-> ⚠️ 这个特性还处于 Beta 阶段。正式发布时 API 可能会完全不同。这段等到正式发布后再翻译。
+> ⚠️ 这个特性还处于 Beta 阶段。正式发布时 API 可能会完全不同。
 
-`ImmutableMappable` provides the ability to map immutable properties. This is how `ImmutableMappable` differs from `Mappable`:
+使用 `ImmutableMappable` 可以映射不可变的属性。下面的表格展示了 `ImmutableMappable` 和 `Mappable` 的不同：
 
 <table>
   <tr>
@@ -235,13 +235,14 @@ User(JSONString: JSONString)
 
 #### `init(map: Map) throws`
 
-This throwable initializer is used to map immutable properties from the given `Map`. Every immutable property should be initialized in this initializer.
+这个可能抛出异常的初始化函数用于在提供的 `Map` 里映射不可变属性。每个不可变的初始化属性都要在这个初始化函数里初始化。
 
-This initializer throws an error when:
-- `Map` fails to get a value for the given key
-- `Map` fails to transform a value using `Transform`
+当发生下列情况时初始化函数会抛出一个错误：
 
-`ImmutableMappable` uses `Map.value(_:using:)` method to get values from the `Map`. This method should be used with the `try` keyword as it is throwable. `Optional` properties can easily be handled using `try?`.
+- `Map` 根据提供的键名获取不到对应值
+- `Map` 使用 `Transform` 后没有得到值 
+
+`ImmutableMappable` 使用 `Map.value(_:using:)` 方法从  `Map` 中获取值。因为可能抛出异常，这个方法在使用时需要使用  `try` 关键字。 `Optional` 的属性可以简单的用  `try?` 处理。
 
 ```swift
 init(map: Map) throws {
@@ -254,7 +255,7 @@ init(map: Map) throws {
 
 #### `mutating func mapping(map: Map)`
 
-This method is where the reverse transform is performed (Model to JSON). Since immutable properties can not be mapped with the `<-` operator, developers have to define the reverse transform using the `>>>` operator.
+这个方法是在 Model 转回 JSON 时调用的。因为不可变的属性不能被 `<-` 映射，所以映射回来时需要使用 `>>>` 。
 
 ```swift
 mutating func mapping(map: Map) {
