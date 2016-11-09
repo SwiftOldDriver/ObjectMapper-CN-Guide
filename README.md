@@ -13,7 +13,7 @@
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
 - [ObjectMapper + Realm](#objectmapper--realm)
 - [To Do](#to-do)
-- [安装](#installation)
+- [安装](#安装)
 
 # 特性:
 - 把 JSON 映射成对象 
@@ -466,34 +466,35 @@ Note: Generating a JSON string of a Realm Object using ObjectMappers' `toJSON` f
 
 # 安装
 ### Cocoapods
-ObjectMapper can be added to your project using [CocoaPods 0.36 or later](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/) by adding the following line to your `Podfile`:
+如果你的项目使用 [CocoaPods 0.36 及以上](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/) 的版本，你可以把下面内容添加到在 `Podfile` 中，将 ObjectMapper 添加到你的项目中:
 
 ```ruby
 pod 'ObjectMapper', '~> 2.2'
 ```
 
 ### Carthage
-If you're using [Carthage](https://github.com/Carthage/Carthage) you can add a dependency on ObjectMapper by adding it to your `Cartfile`:
+如果你的项目使用  [Carthage](https://github.com/Carthage/Carthage) ，你可以把下面的内容添加到 `Cartfile` 中，将 ObjectMapper 的依赖到你的项目中：
 
 ```
 github "Hearst-DD/ObjectMapper" ~> 2.2
 ```
 
 ### Swift Package Manager
-To add ObjectMapper to a [Swift Package Manager](https://swift.org/package-manager/) based project, add:
+如果你的项目使用  [Swift Package Manager](https://swift.org/package-manager/) ，那么你可以把下面内容添加到 `Package.swift` 中的 `dependencies` 数组中，将 ObjectMapper 的依赖到你的项目中：
 
 ```swift
 .Package(url: "https://github.com/Hearst-DD/ObjectMapper.git", majorVersion: 2, minor: 2),
 ```
-to your `Package.swift` files `dependencies` array.
+
 
 ### Submodule
-Otherwise, ObjectMapper can be added as a submodule:
+此外，ObjectMapper 也可以作为一个 submodule 添加到项目中：
+1. 打开终端，使用 `cd` 命令进入项目文件的根目录下，然后在终端中输入 `git submodule add https://github.com/Hearst-DD/ObjectMapper.git` ，把 ObjectMapper 作为项目的一个 [submodule](http://git-scm.com/docs/git-submodule) 添加进来。
+2. 打开 `ObjectMapper` 文件，并将 `ObjectMapper.xcodeproj` 拖进你 app 项目的文件导航中。
+3. 在 Xcode 中，文件导航中点击蓝色项目图标进入到 target 配置界面，在侧边栏的 "TARGETS" 下选择主工程对应的target。
+4. 确保 `ObjectMapper.framework` 的部署版本(deployment target)和主工程的部署版本保持一致。
+5. 在配置界面的顶部选项栏中，打开 "Build Phases" 面板。
+6. 展开"Target Dependencies"组，并添加 `ObjectMapper.framework` 
+7. 点击面板左上角的 `+` 按钮,选择 "New Copy Files Phase"。将这个阶段重命名为 "Copy Frameworks"，设置  "Destination" 为 "Frameworks"，最后添加 `ObjectMapper.framework` .  
 
-1. Add ObjectMapper as a [submodule](http://git-scm.com/docs/git-submodule) by opening the terminal, `cd`-ing into your top-level project directory, and entering the command `git submodule add https://github.com/Hearst-DD/ObjectMapper.git`
-2. Open the `ObjectMapper` folder, and drag `ObjectMapper.xcodeproj` into the file navigator of your app project.
-3. In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-4. Ensure that the deployment target of `ObjectMapper.framework` matches that of the application target.
-5. In the tab bar at the top of that window, open the "Build Phases" panel.
-6. Expand the "Target Dependencies" group, and add `ObjectMapper.framework`.
-7. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `ObjectMapper.framework`.
+
