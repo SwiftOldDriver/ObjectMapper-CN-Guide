@@ -491,17 +491,11 @@ github "Hearst-DD/ObjectMapper" ~> 2.2
 此外，ObjectMapper 也可以作为一个 submodule 添加到项目中：
 
 1. 打开终端，使用 `cd` 命令进入项目文件的根目录下，然后在终端中输入 `git submodule add https://github.com/Hearst-DD/ObjectMapper.git` ，把 ObjectMapper 作为项目的一个 [submodule](http://git-scm.com/docs/git-submodule) 添加进来。
-
 2. 打开 `ObjectMapper` 文件，并将 `ObjectMapper.xcodeproj` 拖进你 app 项目的文件导航中。
-
 3. 在 Xcode 中，文件导航中点击蓝色项目图标进入到 target 配置界面，在侧边栏的 "TARGETS" 下选择主工程对应的target。
-
 4. 确保 `ObjectMapper.framework` 的部署版本( deployment target )和主工程的部署版本保持一致。
-
 5. 在配置界面的顶部选项栏中，打开 "Build Phases" 面板。
-
 6. 展开 "Target Dependencies" 组，并添加 `ObjectMapper.framework` 。
-
 7. 点击面板左上角的 `+` 按钮,选择 "New Copy Files Phase"。将这个阶段重命名为 "Copy Frameworks"，设置  "Destination" 为 "Frameworks"，最后添加 `ObjectMapper.framework` 。  
 
 
