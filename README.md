@@ -12,7 +12,7 @@
 - [映射时的上下文对象](#映射时的上下文对象)
 - [ObjectMapper + Alamofire](#objectmapper--alamofire) 
 - [ObjectMapper + Realm](#objectmapper--realm)
-- [To Do](#to-do)
+- [待完成](#待完成)
 - [安装](#安装)
 
 # 特性:
@@ -460,9 +460,9 @@ class Model: Object, Mappable {
 
 Note: Generating a JSON string of a Realm Object using ObjectMappers' `toJSON` function only works within a Realm write transaction. This is caused because ObjectMapper uses the `inout` flag in its mapping functions (`<-`) which are used both for serializing and deserializing. Realm detects the flag and forces the `toJSON` function to be called within a write block even though the objects are not being modified.
 
-# To Do
-- Improve error handling. Perhaps using `throws`
-- Class cluster documentation
+# 待完成
+- 改善错误的处理。可能使用 `throws` 来处理。
+- 相关类的文档完善
 
 # 安装
 ### Cocoapods
